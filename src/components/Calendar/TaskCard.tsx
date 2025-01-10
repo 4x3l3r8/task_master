@@ -112,6 +112,7 @@ export const TaskCard = ({ task, moveCard }: { task: Task; moveCard: (dragIndex:
         opacity={isDragging ? 0 : 1}
         pos={isDragging ? "absolute" : "initial"}
         ref={ref}
+        zIndex={999}
         cursor={isDragging ? "grabbing" : "grab"}
         data-handler-id={handlerId}
       >

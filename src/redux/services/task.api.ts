@@ -26,7 +26,7 @@ const taskApi = baseApi.injectEndpoints({
           imageUrl = undefined;
         }
 
-        const newTask: Task = { ...task, id: Date.now(), image: imageUrl, status: "To do", index: tasks.length + 1 };
+        const newTask: Task = { ...task, id: Date.now(), image: imageUrl, status: "To do", index: tasks.length };
         tasks = [...tasks, newTask];
         saveTasksToStorage(tasks);
         return { data: newTask };
@@ -85,7 +85,15 @@ const taskApi = baseApi.injectEndpoints({
       },
       invalidatesTags: ["Task"],
     }),
+    reorderTasks: builder.mutation<Task[], { tasks: Task[] }>({
+      queryFn: ({ tasks }) => {
+        saveTasksToStorage(tasks);
+        return { data: tasks };
+      },
+      invalidatesTags: ["Task"],
+    }),
   }),
 });
 
-export const { useGetTasksQuery, useAddTaskMutation, useMoveTaskMutation, useDeleteTaskMutation, useEditTaskMutation } = taskApi;
+export const { useGetTasksQuery, useAddTaskMutation, useMoveTaskMutation, useDeleteTaskMutation, useEditTaskMutation, useReorderTasksMutation } =
+  taskApi;

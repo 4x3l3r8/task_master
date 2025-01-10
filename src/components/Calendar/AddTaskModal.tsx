@@ -28,7 +28,7 @@ export const AddTaskModal = ({ isOpen, onClose }: TaskModalProps) => {
     values: Omit<formValues, "category"> & { category: Category["id"] },
     formHelpers: FormikHelpers<Omit<formValues, "category"> & { category: Category["id"] }>
   ) => {
-    addTask({ ...values, category: Number(values.category) })
+    addTask({ ...values, category: values.category })
       .unwrap()
       .then(() => {
         toast({
