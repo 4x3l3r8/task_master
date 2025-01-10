@@ -1,12 +1,13 @@
-import logo from "@/assets/logo.png";
+// import logo from "@/assets/logo.png";
 import { IconButton } from "@chakra-ui/button";
-import { Flex, FlexProps } from "@chakra-ui/layout";
-import { Image } from "@chakra-ui/react";
+import { Flex, FlexProps, Text } from "@chakra-ui/layout";
+import { useColorModeValue } from "@chakra-ui/react";
 import PropTypes from "prop-types";
 import { FiMenu } from "react-icons/fi";
+import { Link } from "react-router-dom";
 
 interface AuthMobileNavProps extends FlexProps {
-  onOpen: () => void
+  onOpen: () => void;
 }
 
 const AuthMobileNav = ({ onOpen, ...rest }: AuthMobileNavProps) => {
@@ -24,26 +25,18 @@ const AuthMobileNav = ({ onOpen, ...rest }: AuthMobileNavProps) => {
       justifyContent={{ base: "space-between", md: "flex-end" }}
       {...rest}
     >
-      <IconButton
-        display={{ base: "flex", md: "none" }}
-        onClick={onOpen}
-        variant="outline"
-        aria-label="open menu"
-        icon={<FiMenu />}
-      />
-
-      {/* <Text
+      <IconButton display={{ base: "flex", md: "none" }} onClick={onOpen} variant="outline" aria-label="open menu" icon={<FiMenu />} />
+      <Text
         as={Link}
         to={"/"}
         display={{ base: "flex", md: "none" }}
-        fontWeight='medium'
-        color='black'
-        fontSize={{ base: 'xl', md: '2xl' }}
+        color={useColorModeValue("primary.900", "gray.50")}
+        fontWeight="bold"
+        fontSize={{ base: "2xl", md: "2xl" }}
       >
-        Techinnover
-      </Text> */}
-      <Image justifySelf={"center"} src={logo} display={{ base: "flex", md: "none" }} />
-      .
+        TaskMaster
+      </Text>
+      {/* <Image justifySelf={"center"} src={logo} display={{ base: "flex", md: "none" }} /> */}.
     </Flex>
   );
 };
@@ -53,4 +46,3 @@ AuthMobileNav.propTypes = {
 };
 
 export { AuthMobileNav };
-

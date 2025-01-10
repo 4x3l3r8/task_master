@@ -37,7 +37,7 @@ export const Calendar = () => {
 
       {!isLoading && tasks ? (
         <DndProvider backend={HTML5Backend}>
-          <Flex mt={4} gap={4} justifyContent={"space-between"} maxW={{ base: "full" }} overflowX={"scroll"}>
+          <Flex mt={4} gap={4} justifyContent={"space-between"} maxW={"calc(100)"} overflowX={"scroll"}>
             <DropColumn title="To do" tasks={todoTasks} />
             <DropColumn title="In progress" tasks={inProgressTasks} />
             <DropColumn title="Completed" tasks={completedTasks} />
