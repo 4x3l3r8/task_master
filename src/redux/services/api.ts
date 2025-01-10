@@ -21,5 +21,5 @@ export const baseApi = createApi({
   // }),
   baseQuery: fakeBaseQuery(),
   endpoints: () => ({}),
-  tagTypes: ["Task"],
+  tagTypes: ["Task", "Category"],
 });

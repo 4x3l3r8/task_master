@@ -1,4 +1,4 @@
-import { Task } from "@/components/Calendar/types";
+import { Category, Task } from "@/components/Calendar/types";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const simulateImageUpload = (_file: File): Promise<string> => {
@@ -69,4 +69,13 @@ export const isDateOverdue = (dateString: string) => {
 
   // Compare the dates
   return inputDate < today;
+};
+
+export const loadCategoriesFromStorage = (): Category[] => {
+  const storedCategories = localStorage.getItem("taskManagerCategories");
+  return storedCategories ? JSON.parse(storedCategories) : [];
+};
+
+export const saveCategoriesToStorage = (categories: Category[]): void => {
+  localStorage.setItem("taskManagerCategories", JSON.stringify(categories));
 };
