@@ -1,10 +1,10 @@
+import { useAddTaskMutation } from "@/redux/services/task.api";
 import { Box, Button, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay } from "@chakra-ui/react";
 import { FormikHelpers, useFormik } from "formik";
-import { mixed, number, object, string } from "yup";
-import { TaskForm } from "./TaskForm";
-import { formValues } from "./types";
-import { useAddTaskMutation } from "@/redux/services/task.api";
+import { mixed, object, string } from "yup";
 import { toast } from "../shared";
+import { TaskForm } from "./TaskForm";
+import { Category, formValues } from "./types";
 
 export interface TaskModalProps {
   onClose: () => void;
@@ -18,14 +18,17 @@ export const TaskFormValidation = object<formValues>().shape({
   time: string().required("This field is required"),
   priority: string().required("This field is required"),
   file: mixed(),
-  category: number().required("This field is required"),
+  category: string().required("This field is required"), //set category as an object because of how the autocomplete input identifies values
 });
 
 export const AddTaskModal = ({ isOpen, onClose }: TaskModalProps) => {
   const [addTask, { isLoading }] = useAddTaskMutation();
 
-  const handleSubmit = (values: formValues, formHelpers: FormikHelpers<formValues>) => {
-    addTask(values)
+  const handleSubmit = (
+    values: Omit<formValues, "category"> & { category: Category["id"] },
+    formHelpers: FormikHelpers<Omit<formValues, "category"> & { category: Category["id"] }>
+  ) => {
+    addTask({ ...values, category: Number(values.category) })
       .unwrap()
       .then(() => {
         toast({
@@ -45,7 +48,7 @@ export const AddTaskModal = ({ isOpen, onClose }: TaskModalProps) => {
       });
   };
 
-  const formikHandler = useFormik<formValues>({
+  const formikHandler = useFormik<Omit<formValues, "category"> & { category: Category["id"] }>({
     initialValues: {
       name: "",
       description: "",

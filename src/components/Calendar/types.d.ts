@@ -13,6 +13,8 @@ export interface formValues {
   time: string;
 }
 
+export type Task = Omit<formValues, "category"> & { id: number; index: number; status: taskStatus; category: Category["id"] };
+
 export type Priority = "low" | "medium" | "high";
 
 export type taskStatus = "To do" | "In progress" | "Completed";

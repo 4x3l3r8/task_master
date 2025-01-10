@@ -1,14 +1,13 @@
-import { Flex, FormControl, FormErrorMessage, FormLabel, Input, Select, Spinner, Stack, Text, Textarea } from "@chakra-ui/react";
+import { Flex, FormControl, FormErrorMessage, FormLabel, Input, Stack, Text, Textarea } from "@chakra-ui/react";
 import { FormikProps } from "formik";
+import { Dropzone } from "../shared";
+import { CategorySelect } from "./CategorySelect";
 import { PriorityTagSelect } from "./PriorityTagSelect";
 import { formValues } from "./types";
-import { Dropzone } from "../shared";
-import { useGetCategoriesQuery } from "@/redux/services/category.api";
 
 const today = new Date().toISOString().split("T");
 
 export const TaskForm = ({ formik }: { formik: FormikProps<formValues> }) => {
-  const { data, isLoading } = useGetCategoriesQuery(null);
   return (
     <Stack gap={4}>
       <FormControl isRequired isInvalid={formik.touched.name && Boolean(formik.errors.name)}>
@@ -30,7 +29,7 @@ export const TaskForm = ({ formik }: { formik: FormikProps<formValues> }) => {
 
       <PriorityTagSelect formik={formik} />
 
-      <FormControl isRequired isInvalid={formik.touched.category && Boolean(formik.errors.category)}>
+      {/* <FormControl isRequired isInvalid={formik.touched.category && Boolean(formik.errors.category)}>
         <FormLabel>Category</FormLabel>
         <Select placeholder="Select category" onChange={formik.handleChange} value={formik.values.category} id="category" name="category">
           {isLoading || !data ? (
@@ -45,7 +44,9 @@ export const TaskForm = ({ formik }: { formik: FormikProps<formValues> }) => {
             ))
           )}
         </Select>
-      </FormControl>
+      </FormControl> */}
+
+      <CategorySelect formik={formik} />
 
       <FormControl isInvalid={formik.touched.image && Boolean(formik.errors.image)}>
         <FormLabel display={"flex"}>
