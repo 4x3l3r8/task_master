@@ -1,6 +1,8 @@
 # Simple To do app - Techinnover
 
-This is a simple app that tracks time to do tasks and when they are over due. It was buikt using vite, React Typescript, redux toolkit and chakra-UI.
+This is a simple app that tracks time to do tasks and when they are over due.
+
+## It was built using vite, React Typescript, redux toolkit and chakra-UI.
 
 This app can be run by cloning to your system, running the install command `npm install` then once all libraries are done installing, running `npm run dev` to start up the local server.
 
