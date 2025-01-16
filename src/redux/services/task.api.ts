@@ -1,6 +1,6 @@
-import { formValues, Task, taskStatus } from "@/components/Calendar/types";
-import { baseApi } from "./api";
+import { Task, taskStatus } from "@/components/Calendar/types";
 import { loadTasksFromStorage, saveTasksToStorage, simulateImageUpload } from "@/utils/helpers";
+import { baseApi } from "./api";
 
 let tasks: Task[] = loadTasksFromStorage();
 
@@ -13,7 +13,7 @@ const taskApi = baseApi.injectEndpoints({
       providesTags: ["Task"],
     }),
 
-    addTask: builder.mutation<Task, formValues>({
+    addTask: builder.mutation<Task, Omit<Task, "id" | "status" | "index">>({
       queryFn: async (task) => {
         let imageUrl: string | undefined;
 
@@ -26,7 +26,7 @@ const taskApi = baseApi.injectEndpoints({
           imageUrl = undefined;
         }
 
-        const newTask: Task = { ...task, id: Date.now(), image: imageUrl, status: "To do" };
+        const newTask: Task = { ...task, id: Date.now(), image: imageUrl, status: "To do", index: tasks.length };
         tasks = [...tasks, newTask];
         saveTasksToStorage(tasks);
         return { data: newTask };
@@ -74,7 +74,6 @@ const taskApi = baseApi.injectEndpoints({
         }
 
         const taskIndex = tasks.findIndex((t) => t.id === updatedtask.id);
-
         if (taskIndex === -1) {
           return { error: { status: 404, data: "Task not found" } };
         }
@@ -86,7 +85,15 @@ const taskApi = baseApi.injectEndpoints({
       },
       invalidatesTags: ["Task"],
     }),
+    reorderTasks: builder.mutation<Task[], { tasks: Task[] }>({
+      queryFn: ({ tasks }) => {
+        saveTasksToStorage(tasks);
+        return { data: tasks };
+      },
+      invalidatesTags: ["Task"],
+    }),
   }),
 });
 
-export const { useGetTasksQuery, useAddTaskMutation, useMoveTaskMutation, useDeleteTaskMutation, useEditTaskMutation } = taskApi;
+export const { useGetTasksQuery, useAddTaskMutation, useMoveTaskMutation, useDeleteTaskMutation, useEditTaskMutation, useReorderTasksMutation } =
+  taskApi;

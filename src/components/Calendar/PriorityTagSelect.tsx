@@ -33,7 +33,7 @@ export const PriorityTagSelect = ({
   return (
     <FormControl isRequired isInvalid={priorityTouched && Boolean(priorityError)}>
       <FormLabel>Priority</FormLabel>
-      <Box rounded={"lg"} border={"1px solid"} borderColor={"gray.200"} p={3} as={Flex} onClick={onToggle} cursor={"pointer"}>
+      <Box rounded={"lg"} border={"1px solid"} borderColor={"gray.200"} pl={3} as={Flex} alignItems={"center"} onClick={onToggle} cursor={"pointer"}>
         {
           {
             low: (
@@ -56,7 +56,7 @@ export const PriorityTagSelect = ({
         }
 
         <Menu isOpen={isOpen} onClose={onClose} isLazy placement="left-start">
-          <MenuButton as={IconButton} icon={<Icon as={CgChevronDown} />} variant={""} size={""} ml={"auto"} />
+          <MenuButton as={IconButton} icon={<Icon as={CgChevronDown} />} variant={"ghost"} size={"md"} m={0} ml={"auto"} />
           <MenuList>
             <MenuOptionGroup value={values.priority} type="radio" onChange={(value) => setFieldValue("priority", value)}>
               <MenuItemOption value="high" flexDir={"row-reverse"} color={"whatsapp.500"} _checked={{ bgColor: "whatsapp.50" }}>

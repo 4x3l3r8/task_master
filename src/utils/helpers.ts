@@ -27,6 +27,14 @@ export const saveTasksToStorage = (tasks: Task[]): void => {
 export const searchTasks = (tasks: Task[], searchTerm: string): Task[] => {
   const lowercasedTerm = searchTerm.toLowerCase().trim();
 
+  // get today's tasks by parsing their IDs since it is the dateTime that is used as the Id
+  // const todaysTasks = tasks?.filter((task) => {
+  //   const taskDate = new Date(task.id);
+  //   const today = new Date();
+  //   return taskDate.toDateString() === today.toDateString();
+  // });
+
+  // Search in today's tasks only
   return tasks?.filter((task) => {
     // Search in name
     if (task.name.toLowerCase().includes(lowercasedTerm)) return true;

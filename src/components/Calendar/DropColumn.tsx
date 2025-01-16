@@ -4,8 +4,10 @@ import { AddTaskModal } from "./AddTaskModal";
 import { TaskCard } from "./TaskCard";
 import { Task, taskStatus } from "./types";
 import { useDrop } from "react-dnd";
-import { useMoveTaskMutation } from "@/redux/services/task.api";
+import { useMoveTaskMutation, useReorderTasksMutation } from "@/redux/services/task.api";
 import { toast } from "../shared";
+import update from "immutability-helper";
+import { useCallback } from "react";
 
 interface DropColumnProps {
   title: taskStatus;
@@ -13,10 +15,16 @@ interface DropColumnProps {
 }
 
 export const DropColumn = ({ title, tasks }: DropColumnProps) => {
-  const bg = useColorModeValue("#F5F7F9", "#7D8996");
   const [moveTask] = useMoveTaskMutation();
+  const [reorder] = useReorderTasksMutation();
   const { isOpen: addIsOpen, onClose: addOnClose, onOpen: addOnOpen } = useDisclosure();
 
+  /**
+   * The `handleMove` function moves a task to a new status and displays a success message using a toast
+   * notification.
+   * @param {number} id - The `id` parameter in the `handleMove` function is a number that represents the
+   * unique identifier of the task that is being moved.
+   */
   const handleMove = (id: number) => {
     moveTask({ newStatus: title, taskId: id })
       .unwrap()
@@ -29,6 +37,20 @@ export const DropColumn = ({ title, tasks }: DropColumnProps) => {
       });
   };
 
+  /* The `moveCard` function defined using `useCallback` is responsible for updating the order of tasks
+when a task card is dragged and dropped within the same column. */
+  const moveCard = useCallback((dragIndex: number, hoverIndex: number) => {
+    reorder({
+      tasks: update(tasks, {
+        $splice: [
+          [dragIndex, 1],
+          [hoverIndex, 0, tasks[dragIndex] as Task],
+        ],
+      }),
+    });
+    console.log("reordered");
+  }, []);
+
   const [{ isOver }, drop] = useDrop(() => ({
     accept: "Task",
     drop: (dragItem: Task) => {
@@ -39,9 +61,10 @@ export const DropColumn = ({ title, tasks }: DropColumnProps) => {
     }),
   }));
 
+  const bg = useColorModeValue(isOver ? "primary.50" : "#F5F7F9", isOver ? "primary.50" : "#7D8996");
   return (
     <>
-      <Box w={{ md: "30.33%" }} bg={bg} rounded={"lg"} p={3} minW={"20rem"} pos={"relative"} ref={drop}>
+      <Box w={{ md: "30.33%" }} bg={bg} rounded={"lg"} p={3} minW={"20rem"} h={"fit-content"} pos={"relative"} ref={drop}>
         <HStack>
           <Heading fontSize={"xl"} fontWeight={"400"} color={"gray.400"}>
             {title}
@@ -56,15 +79,23 @@ export const DropColumn = ({ title, tasks }: DropColumnProps) => {
                         return <TaskCard key={i} />
                     })} */}
           {tasks.map((task, i) => {
-            return <TaskCard task={task} key={i} />;
+            return <TaskCard task={task} key={i} moveCard={moveCard} />;
           })}
           {tasks.length < 1 && (
-            <Center rounded={"md"} mt={3} p={4} border="1px dashed" borderColor={"gray.300"}>
-              <Text color={"secondary.200"}>No tasks</Text>
+            <Center
+              rounded={"md"}
+              mt={3}
+              p={4}
+              h={"72"}
+              border="1px dashed"
+              bg={isOver ? "primary.100" : "slate.300"}
+              borderColor={isOver ? "primary.400" : "gray.300"}
+            >
+              <Text color={isOver ? "primary.400" : "secondary.200"}>{isOver ? "Drop Task here" : "No tasks yet"}</Text>
             </Center>
           )}
         </Stack>
-        {isOver && (
+        {/* {isOver && (
           <Center
             border={"1px dashed"}
             borderColor={"primary.400"}
@@ -73,12 +104,12 @@ export const DropColumn = ({ title, tasks }: DropColumnProps) => {
             pos={"absolute"}
             w={"94%"}
             h={"80%"}
-            top={16}
+            bottom={0}
             rounded={"lg"}
           >
             <Text>Drop Task here</Text>
           </Center>
-        )}
+        )} */}
       </Box>
       <AddTaskModal onClose={addOnClose} isOpen={addIsOpen} />
     </>

@@ -13,9 +13,12 @@ const categoryApi = baseApi.injectEndpoints({
       providesTags: ["Category"],
     }),
 
-    addCategory: builder.mutation<Category, { id: number; name: string }>({
-      queryFn: async ({ id, name }) => {
-        const newCategory: Category = { id, name };
+    addCategory: builder.mutation<Category, { name: string }>({
+      queryFn: async ({ name }) => {
+        if (categories.find((category) => category.name.toLowerCase() === name.toLowerCase())) {
+          return { error: { status: 400, data: "Category already exists" } };
+        }
+        const newCategory: Category = { id: Date.now(), name };
         categories = [...categories, newCategory];
         saveCategoriesToStorage(categories);
         return { data: newCategory };
