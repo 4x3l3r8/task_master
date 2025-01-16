@@ -13,6 +13,7 @@ export const Calendar = () => {
   const { data: tasks, isLoading } = useGetTasksQuery();
   const [searchValue, setSearchValue] = useState("");
   const [currentDate, setCurrentDate] = useState(new Date());
+  const showHidden = localStorage.getItem("reveal");
 
   const formattedDate = useMemo(() => format(currentDate, "d MMMM yyyy"), [currentDate]);
 
@@ -56,7 +57,7 @@ export const Calendar = () => {
       <HStack w={"full"} flexDir={{ base: "column", md: "row" }}>
         <Flex w={"full"} gap={6} flex={3} justifyContent={{ base: "space-between", md: "start" }}>
           <Heading fontSize={{ base: "2xl", md: "3xl" }}>{formattedDate}</Heading>
-          <ButtonGroup gap={3} variant={"outline"} colorScheme="blackAlpha">
+          <ButtonGroup gap={3} variant={"outline"} colorScheme="blackAlpha" display={showHidden === "true" ? "flex" : "none"}>
             <IconButton
               aria-label="previous day"
               colorScheme="primary"
